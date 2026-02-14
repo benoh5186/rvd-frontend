@@ -20,29 +20,14 @@ export default function FeaturedCategory() {
 
         } finally {
             setLoading(false)
+            setRefresh(false)
         }
 
 
     }
 
     useEffect(() => {
-
+        loadProducts(false)
     }, [])
-
-    useEffect(() => {
-
-    }, [products])
-
-
-    useEffect(() => {
-
-    }, [loading])
-
-    useEffect(() => {
-         
-    }, [fail])
-    useEffect(() => {
-        
-    }, [refresh])
 
 }
