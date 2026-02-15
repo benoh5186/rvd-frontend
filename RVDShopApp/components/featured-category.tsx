@@ -1,6 +1,6 @@
 import { useEffect, useState, useCallback } from 'react';
-import { ActivityIndicator } from 'react-native';
-import { FlatList, View, Text} from 'react-native-reanimated/lib/typescript/Animated';
+import { ActivityIndicator, StyleSheet} from 'react-native';
+import { FlatList, View, Text, SafeAreaView, Image } from 'react-native';
 
 export default function FeaturedCategory() {
     const [products, setProducts] = useState<any[]>([]);
@@ -43,16 +43,47 @@ export default function FeaturedCategory() {
         return <Text>{"Network Error"}</Text>
     }
     return (
-        <View style={{ flex: 1 }}>
+        <SafeAreaView style={{ flex: 1 }}>
             <FlatList 
             data={products}
             keyExtractor={(item) => item.id}
-            renderItem={({item}) => <Text>{item.title}</Text>}
+            renderItem={({ item }) => (
+                <View style={styles.card}>
+                    <Image source={{uri: item.image}} style={styles.image} resizeMode='contain'/>
+                    <Text style={styles.title}>{item.title}</Text>
+                    <Text style={styles.price}>{item.price}</Text>
+                </View>
+                
+              )}
             refreshing={refresh}
             onRefresh={onRefresh}  
             />
-        </View>
+        </SafeAreaView>
     )
 
 
 }
+
+const styles = StyleSheet.create({
+    card: {
+        padding: 12,
+        margin: 10,
+        backgroundColor: "#fff",
+        borderRadius: 8,
+        
+    },
+    title: {
+        marginTop: 8,
+        fontWeight: "600",
+    },
+
+    price: {
+        marginTop: 4
+    },
+    image: {
+        width: "100%",
+        height: 150
+    }
+}
+
+)
