@@ -74,46 +74,52 @@ export default function FeaturedCategory() {
                 
               )}
             refreshing={refresh}
-            onRefresh={onRefresh}  
-            />
-            <View style={styles.pagination}>
-                <Text
-                style={[styles.navBtn, page === 1 && styles.disabled]}
-                onPress={() => setPage(1)}  
-                >
-                    {"<<"}
-                </Text>
-                <Text style={[styles.navBtn, page === 1 && styles.disabled]} onPress={() => setPage(p => (
-                    Math.max(1, (p - 1))
-                ))}>{"<Prev"}</Text>
-                <View style={styles.pageRow}>
-                    {pageContainer.map((n) => (
-                        <Text 
-                            onPress={() => setPage(n)}
-                            style={[styles.pageBtn, n === page && styles.pageBtnActive]}
-                            >{n}
-                            </Text>
-                    ))}
-                </View>
-
-                <Text
-                    style={[styles.navBtn, page === maxPage && styles.disabled]}
-                    onPress={() => setPage(p => {
-                    if ((p + 1) > maxPage) {
-                        return p
-                    } else {   
-                        return p + 1
+            onRefresh={onRefresh}
+            ListFooterComponent={
+                maxPage > 0 ? (
+                    <View style={styles.pagination}>
+                    <Text
+                    style={[styles.navBtn, page === 1 && styles.disabled]}
+                    onPress={() => setPage(1)}  
+                    >
+                        {"<<"}
+                    </Text>
+                    <Text style={[styles.navBtn, page === 1 && styles.disabled]} onPress={() => setPage(p => (
+                        Math.max(1, (p - 1))
+                    ))}>{"<Prev"}</Text>
+                    <View style={styles.pageRow}>
+                        {pageContainer.map((n) => (
+                            <Text 
+                                onPress={() => setPage(n)}
+                                style={[styles.pageBtn, n === page && styles.pageBtnActive]}
+                                >{n}
+                                </Text>
+                        ))}
+                    </View>
+    
+                    <Text
+                        style={[styles.navBtn, page === maxPage && styles.disabled]}
+                        onPress={() => setPage(p => {
+                        if ((p + 1) > maxPage) {
+                            return p
+                        } else {   
+                            return p + 1
+                        }
                     }
-                }
-            
-                )}>{"Next>"}</Text>
-                <Text
-                style={[styles.navBtn, page === maxPage && styles.disabled]}
-                onPress={() => setPage(maxPage)}  
-                >
-                    {">>"}
-                </Text>
-            </View>
+                
+                    )}>{"Next>"}</Text>
+                    <Text
+                    style={[styles.navBtn, page === maxPage && styles.disabled]}
+                    onPress={() => setPage(maxPage)}  
+                    >
+                        {">>"}
+                    </Text>
+                </View>
+                ) : null
+            }  
+
+            />
+
 
         </SafeAreaView>
     )
