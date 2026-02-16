@@ -1,6 +1,7 @@
 import { useEffect, useState, useCallback } from 'react';
 import { ActivityIndicator, StyleSheet} from 'react-native';
 import { FlatList, View, Text, SafeAreaView, Image } from 'react-native';
+import { Picker } from "@react-native-picker/picker";
 
 export default function FeaturedCategory() {
     const [products, setProducts] = useState<any[]>([]);
@@ -90,6 +91,7 @@ export default function FeaturedCategory() {
                     <View style={styles.pageRow}>
                         {pageContainer.map((n) => (
                             <Text 
+                                key={n}
                                 onPress={() => setPage(n)}
                                 style={[styles.pageBtn, n === page && styles.pageBtnActive]}
                                 >{n}
