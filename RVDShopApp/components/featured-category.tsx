@@ -16,6 +16,15 @@ export default function FeaturedCategory() {
         (page - 1) * itemsPerPage,
         page * itemsPerPage
     )
+    const pageIndex = Math.floor((page - 1) / itemsPerPage)
+    const start = pageIndex * itemsPerPage + 1
+    const end = Math.min(start + itemsPerPage - 1, maxPage)
+
+    const pageContainer = []
+    for (let i = start; i <= end; i++) {
+        pageContainer.push(i)
+    }
+
 
 
     async function loadProducts(refresh = false) {
@@ -72,7 +81,9 @@ export default function FeaturedCategory() {
                 <Text onPress={() => setPage(p => (
                     Math.max(1, (p - 1))
                 ))}>{"<"}</Text>
-                <Text>{page}</Text>
+                {pageContainer.map((n) => (
+                    <Text onPress={() => setPage(n)}>{n}</Text>
+                ))}
                 <Text onPress={() => setPage(p => {
                     if ((p + 1) > maxPage) {
                         return p
