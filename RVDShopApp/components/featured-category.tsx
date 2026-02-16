@@ -7,6 +7,16 @@ export default function FeaturedCategory() {
     const [loading, setLoading] = useState(false);
     const [fail, setFailure] = useState<string | null>(null);
     const [refresh, setRefresh] = useState(false);
+    const [page, setPage] = useState(1);
+    
+    const itemsPerPage = 5;
+
+    const maxPage = products.length / itemsPerPage
+    const paginatedProducts = products.slice(
+        (page - 1) * itemsPerPage,
+        page * itemsPerPage
+    )
+
 
     async function loadProducts(refresh = false) {
         try{
@@ -31,7 +41,7 @@ export default function FeaturedCategory() {
     useEffect(() => {
         loadProducts(false)
     }, [])
-
+    
     const onRefresh = useCallback(() => {
         loadProducts(true);
     }, [loadProducts])
@@ -45,7 +55,7 @@ export default function FeaturedCategory() {
     return (
         <SafeAreaView style={{ flex: 1 }}>
             <FlatList 
-            data={products}
+            data={paginatedProducts}
             keyExtractor={(item) => item.id}
             renderItem={({ item }) => (
                 <View style={styles.card}>
@@ -58,6 +68,21 @@ export default function FeaturedCategory() {
             refreshing={refresh}
             onRefresh={onRefresh}  
             />
+            <View>
+                <Text onPress={() => setPage(p => (
+                    Math.max(1, (p - 1))
+                ))}>{"<"}</Text>
+                <Text>{page}</Text>
+                <Text onPress={() => setPage(p => {
+                    if ((p + 1) > maxPage) {
+                        return p
+                    } else {   
+                        return p + 1
+                    }
+                }
+                )}>{">"}</Text>
+            </View>
+
         </SafeAreaView>
     )
 
