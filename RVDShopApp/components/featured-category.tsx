@@ -8,9 +8,10 @@ export default function FeaturedCategory() {
     const [fail, setFailure] = useState<string | null>(null);
     const [refresh, setRefresh] = useState(false);
     const [page, setPage] = useState(1);
-    
-    const itemsPerPage = 5;
 
+
+    // Pagination 
+    const itemsPerPage = 5;
     const maxPage = products.length / itemsPerPage
     const paginatedProducts = products.slice(
         (page - 1) * itemsPerPage,
@@ -24,8 +25,6 @@ export default function FeaturedCategory() {
     for (let i = start; i <= end; i++) {
         pageContainer.push(i)
     }
-
-
 
     async function loadProducts(refresh = false) {
         try{
@@ -77,21 +76,43 @@ export default function FeaturedCategory() {
             refreshing={refresh}
             onRefresh={onRefresh}  
             />
-            <View>
-                <Text onPress={() => setPage(p => (
+            <View style={styles.pagination}>
+                <Text
+                style={[styles.navBtn, page === 1 && styles.disabled]}
+                onPress={() => setPage(1)}  
+                >
+                    {"<<"}
+                </Text>
+                <Text style={[styles.navBtn, page === 1 && styles.disabled]} onPress={() => setPage(p => (
                     Math.max(1, (p - 1))
-                ))}>{"<"}</Text>
-                {pageContainer.map((n) => (
-                    <Text onPress={() => setPage(n)}>{n}</Text>
-                ))}
-                <Text onPress={() => setPage(p => {
+                ))}>{"<Prev"}</Text>
+                <View style={styles.pageRow}>
+                    {pageContainer.map((n) => (
+                        <Text 
+                            onPress={() => setPage(n)}
+                            style={[styles.pageBtn, n === page && styles.pageBtnActive]}
+                            >{n}
+                            </Text>
+                    ))}
+                </View>
+
+                <Text
+                    style={[styles.navBtn, page === maxPage && styles.disabled]}
+                    onPress={() => setPage(p => {
                     if ((p + 1) > maxPage) {
                         return p
                     } else {   
                         return p + 1
                     }
                 }
-                )}>{">"}</Text>
+            
+                )}>{"Next>"}</Text>
+                <Text
+                style={[styles.navBtn, page === maxPage && styles.disabled]}
+                onPress={() => setPage(maxPage)}  
+                >
+                    {">>"}
+                </Text>
             </View>
 
         </SafeAreaView>
@@ -119,7 +140,43 @@ const styles = StyleSheet.create({
     image: {
         width: "100%",
         height: 150
-    }
+    },
+
+    pagination: {
+        flexDirection: "row",
+        alignItems: "center",
+        justifyContent: "center",
+        paddingHorizontal: 16,
+        paddingVertical: 12,
+      },
+      
+      pageRow: {
+        flexDirection: "row",
+        gap: 10, 
+      },
+      
+      pageBtn: {
+        paddingHorizontal: 10,
+        paddingVertical: 6,
+        borderRadius: 6,
+        borderWidth: 1,
+        borderColor: "#ddd",
+      },
+      
+      pageBtnActive: {
+        borderColor: "#333",
+        fontWeight: "700",
+      },
+      
+      navBtn: {
+        paddingHorizontal: 10,
+        paddingVertical: 6,
+        fontWeight: "600",
+      },
+      
+      disabled: {
+        opacity: 0.3,
+      },
 }
 
 )
