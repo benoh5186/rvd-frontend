@@ -1,7 +1,8 @@
 import { useEffect, useState, useCallback } from 'react';
 import { ActivityIndicator, StyleSheet} from 'react-native';
 import { FlatList, View, Text, SafeAreaView, Image } from 'react-native';
-import { Picker } from "@react-native-picker/picker";
+import DropDownPicker from 'react-native-dropdown-picker';
+
 
 export default function FeaturedCategory() {
     const [products, setProducts] = useState<any[]>([]);
@@ -9,6 +10,14 @@ export default function FeaturedCategory() {
     const [fail, setFailure] = useState<string | null>(null);
     const [refresh, setRefresh] = useState(false);
     const [page, setPage] = useState(1);
+    const [pickerValue, setPickerValue] = useState(null);
+    const items = [
+        { label: 'New arrivals', value: 'new' },
+        { label: 'Price, Lowest', value: 'priceLow' },
+        { label: 'Price, Highest', value: 'priceHigh' },
+      ];
+    // dropdown state
+    const [open, setOpen] = useState(false);
 
 
 
@@ -123,12 +132,17 @@ export default function FeaturedCategory() {
             }  
             ListHeaderComponent={
                 maxPage > 0 ? (
-                    <Picker >
-                        <Picker.Item label="New arrivals" value="new" />
-                        <Picker.Item label="Price, Lowest" value="priceLow" />
-                        <Picker.Item label="Price, Highest" value="priceHigh" />
-                    </Picker>
-
+                    <DropDownPicker
+                        style={styles.dropDown}
+                        open={open}
+                        value={pickerValue}
+                        items={items}
+                        setValue={setPickerValue}
+                        placeholder='sort'
+                        setOpen={setOpen}
+                        listMode="MODAL"
+                        textStyle={{ fontSize: 12 }}
+                       />
                 ) : null
             }
 
@@ -195,8 +209,16 @@ const styles = StyleSheet.create({
       },
       
       disabled: {
-        opacity: 0.3,
-      },
+        opacity: 0.3,},
+        
+      dropDown: {
+            width: "20%", 
+            alignSelf: "flex-end",
+            minHeight: 32,
+            marginRight: 16, 
+            marginTop: 50,
+            borderRadius: 30,
+            borderColor: "grey"
+          },
 }
-
 )
