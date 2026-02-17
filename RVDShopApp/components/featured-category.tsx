@@ -4,13 +4,14 @@ import { FlatList, View, Text, SafeAreaView, Image } from 'react-native';
 import DropDownPicker from 'react-native-dropdown-picker';
 
 
+
 export default function FeaturedCategory() {
     const [products, setProducts] = useState<any[]>([]);
     const [loading, setLoading] = useState(false);
     const [fail, setFailure] = useState<string | null>(null);
     const [refresh, setRefresh] = useState(false);
     const [page, setPage] = useState(1);
-    const [pickerValue, setPickerValue] = useState(null);
+    const [pickerValue, setPickerValue] = useState("New arrivals");
     const items = [
         { label: 'New arrivals', value: 'new' },
         { label: 'Price, Lowest', value: 'priceLow' },
@@ -138,7 +139,7 @@ export default function FeaturedCategory() {
                         value={pickerValue}
                         items={items}
                         setValue={setPickerValue}
-                        placeholder='sort'
+                        placeholder={pickerValue}
                         setOpen={setOpen}
                         listMode="MODAL"
                         textStyle={{ fontSize: 12 }}
@@ -212,12 +213,12 @@ const styles = StyleSheet.create({
         opacity: 0.3,},
         
       dropDown: {
-            width: "20%", 
+            width: "37%",
             alignSelf: "flex-end",
             minHeight: 32,
             marginRight: 16, 
             marginTop: 50,
-            borderRadius: 30,
+            borderRadius: 5,
             borderColor: "grey"
           },
 }
