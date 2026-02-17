@@ -1,4 +1,4 @@
-import { useEffect, useState, useCallback } from 'react';
+import { useEffect, useState, useCallback, useMemo } from 'react';
 import { ActivityIndicator, StyleSheet} from 'react-native';
 import { FlatList, View, Text, SafeAreaView, Image } from 'react-native';
 import DropDownPicker from 'react-native-dropdown-picker';
@@ -11,7 +11,7 @@ export default function FeaturedCategory() {
     const [fail, setFailure] = useState<string | null>(null);
     const [refresh, setRefresh] = useState(false);
     const [page, setPage] = useState(1);
-    const [pickerValue, setPickerValue] = useState("New arrivals");
+    const [pickerValue, setPickerValue] = useState("new");
     const items = [
         { label: 'New arrivals', value: 'new' },
         { label: 'Price, Lowest', value: 'priceLow' },
@@ -21,12 +21,27 @@ export default function FeaturedCategory() {
     const [open, setOpen] = useState(false);
 
 
+    const sortedProducts = useMemo(() => {
+        const sortedCopy = [...products]
+        switch(pickerValue){
+            case "new":
+                return sortedCopy.sort((p1, p2) => p1.id - p2.id)
+            case "priceLow":
+                return sortedCopy.sort((p1, p2) =>  p1.price - p2.price)
+            case "priceHigh":
+               return  sortedCopy.sort((p1, p2) => p2.price - p1.price)
+            default:
+                return products
+
+        }
+            
+    }, [products, pickerValue])
 
 
     // Pagination 
     const itemsPerPage = 5;
     const maxPage = products.length / itemsPerPage
-    const paginatedProducts = products.slice(
+    const paginatedProducts = sortedProducts.slice(
         (page - 1) * itemsPerPage,
         page * itemsPerPage
     )
