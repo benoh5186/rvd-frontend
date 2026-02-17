@@ -11,6 +11,8 @@ export default function FeaturedCategory() {
     const [page, setPage] = useState(1);
 
 
+
+
     // Pagination 
     const itemsPerPage = 5;
     const maxPage = products.length / itemsPerPage
@@ -119,6 +121,16 @@ export default function FeaturedCategory() {
                 </View>
                 ) : null
             }  
+            ListHeaderComponent={
+                maxPage > 0 ? (
+                    <Picker >
+                        <Picker.Item label="New arrivals" value="new" />
+                        <Picker.Item label="Price, Lowest" value="priceLow" />
+                        <Picker.Item label="Price, Highest" value="priceHigh" />
+                    </Picker>
+
+                ) : null
+            }
 
             />
 
