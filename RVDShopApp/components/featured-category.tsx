@@ -2,6 +2,8 @@ import { useEffect, useState, useCallback, useMemo } from 'react';
 import { ActivityIndicator, StyleSheet} from 'react-native';
 import { FlatList, View, Text, SafeAreaView, Image } from 'react-native';
 import DropDownPicker from 'react-native-dropdown-picker';
+import PaginationControls from './paginated-products';
+
 
 
 
@@ -41,18 +43,8 @@ export default function FeaturedCategory() {
     // Pagination 
     const itemsPerPage = 5;
     const maxPage = products.length / itemsPerPage
-    const paginatedProducts = sortedProducts.slice(
-        (page - 1) * itemsPerPage,
-        page * itemsPerPage
-    )
-    const pageIndex = Math.floor((page - 1) / itemsPerPage)
-    const start = pageIndex * itemsPerPage + 1
-    const end = Math.min(start + itemsPerPage - 1, maxPage)
-
-    const pageContainer = []
-    for (let i = start; i <= end; i++) {
-        pageContainer.push(i)
-    }
+    const paginatedProducts = paginateProducts(sortedProducts, page, itemsPerPage)
+    const pageContainer = paginateContainer(products, page)
 
     async function loadProducts(refresh = false) {
         try{
@@ -105,45 +97,7 @@ export default function FeaturedCategory() {
             onRefresh={onRefresh}
             ListFooterComponent={
                 maxPage > 0 ? (
-                    <View style={styles.pagination}>
-                    <Text
-                    style={[styles.navBtn, page === 1 && styles.disabled]}
-                    onPress={() => setPage(1)}  
-                    >
-                        {"<<"}
-                    </Text>
-                    <Text style={[styles.navBtn, page === 1 && styles.disabled]} onPress={() => setPage(p => (
-                        Math.max(1, (p - 1))
-                    ))}>{"<Prev"}</Text>
-                    <View style={styles.pageRow}>
-                        {pageContainer.map((n) => (
-                            <Text 
-                                key={n}
-                                onPress={() => setPage(n)}
-                                style={[styles.pageBtn, n === page && styles.pageBtnActive]}
-                                >{n}
-                                </Text>
-                        ))}
-                    </View>
-    
-                    <Text
-                        style={[styles.navBtn, page === maxPage && styles.disabled]}
-                        onPress={() => setPage(p => {
-                        if ((p + 1) > maxPage) {
-                            return p
-                        } else {   
-                            return p + 1
-                        }
-                    }
-                
-                    )}>{"Next>"}</Text>
-                    <Text
-                    style={[styles.navBtn, page === maxPage && styles.disabled]}
-                    onPress={() => setPage(maxPage)}  
-                    >
-                        {">>"}
-                    </Text>
-                </View>
+                    PaginationControls(maxPage, page, pageContainer, setPage)
                 ) : null
             }  
             ListHeaderComponent={
@@ -171,6 +125,41 @@ export default function FeaturedCategory() {
 
 }
 
+
+export function paginateProducts(
+    products: any[],
+    page: number,
+    itemsPerPage: number
+
+) {
+
+    const paginatedProducts = products.slice(
+        (page - 1) * itemsPerPage,
+        page * itemsPerPage
+    )
+
+    return paginatedProducts
+
+}
+
+export function paginateContainer(
+    products: any[],
+    page: number
+) {
+    const itemsPerPage = 5;
+    const pageIndex = Math.floor((page - 1) / itemsPerPage)
+    const maxPage = products.length / itemsPerPage
+    const start = pageIndex * itemsPerPage + 1
+    const end = Math.min(start + itemsPerPage - 1, maxPage)
+
+    const pageContainer = []
+    for (let i = start; i <= end; i++) {
+        pageContainer.push(i)
+    }
+    return pageContainer
+
+}
+
 const styles = StyleSheet.create({
     card: {
         padding: 12,
@@ -191,50 +180,15 @@ const styles = StyleSheet.create({
         width: "100%",
         height: 150
     },
-
-    pagination: {
-        flexDirection: "row",
-        alignItems: "center",
-        justifyContent: "center",
-        paddingHorizontal: 16,
-        paddingVertical: 12,
-      },
-      
-      pageRow: {
-        flexDirection: "row",
-        gap: 10, 
-      },
-      
-      pageBtn: {
-        paddingHorizontal: 10,
-        paddingVertical: 6,
-        borderRadius: 6,
-        borderWidth: 1,
-        borderColor: "#ddd",
-      },
-      
-      pageBtnActive: {
-        borderColor: "#333",
-        fontWeight: "700",
-      },
-      
-      navBtn: {
-        paddingHorizontal: 10,
-        paddingVertical: 6,
-        fontWeight: "600",
-      },
-      
-      disabled: {
-        opacity: 0.3,},
         
-      dropDown: {
-            width: "37%",
-            alignSelf: "flex-end",
-            minHeight: 32,
-            marginRight: 16, 
-            marginTop: 50,
-            borderRadius: 5,
-            borderColor: "grey"
-          },
+    dropDown: {
+          width: "37%",
+          alignSelf: "flex-end",
+          minHeight: 32,
+          marginRight: 16, 
+          marginTop: 50,
+          borderRadius: 5,
+          borderColor: "grey"
+        },
 }
 )
